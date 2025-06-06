@@ -45,14 +45,14 @@ document.addEventListener('DOMContentLoaded', function() {
                     e.preventDefault();
                 } else {
                     updateSummary();
-                    // Simular envío (en producción sería una llamada AJAX)
+                    // Simular envío
                     const submitBtn = this.querySelector('.btn-submit');
                     const originalText = submitBtn.innerHTML;
                     
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = 'Procesando... <i class="lnr lnr-sync lnr-spin"></i>';
                     
-                    // Aquí iría la llamada AJAX real
+                    // Aquí va la llamada AJAX
                     setTimeout(() => {
                         alert('Reserva confirmada con éxito. Recibirá un correo de confirmación.');
                         submitBtn.innerHTML = originalText;

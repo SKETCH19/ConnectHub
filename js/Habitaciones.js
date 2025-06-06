@@ -201,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
         galleryModal.style.display = 'none';
     }
 
-    // Event listeners
+    
     roomSearch.addEventListener('input', filterRooms);
     priceFilter.addEventListener('change', filterRooms);
     typeFilter.addEventListener('change', filterRooms);
@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Inicializar
+    // Iniciar
     loadRooms(roomsData);
     loadPriceTable(roomsData);
 });

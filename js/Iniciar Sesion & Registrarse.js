@@ -31,8 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simular envío (en producción sería una petición AJAX)
         simulateSubmit(loginForm, 'Iniciando sesión...');
         
-        // Aquí iría la llamada real al backend
-        // fetch('/api/login', { method: 'POST', body: new FormData(loginForm) })
+        // Aquí va la llamada al backend
       }
     });
   }
@@ -86,8 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Simular envío (en producción sería una petición AJAX)
         simulateSubmit(registerForm, 'Creando cuenta...');
         
-        // Aquí iría la llamada real al backend
-        // fetch('/api/register', { method: 'POST', body: new FormData(registerForm) })
+        // Aquí va la llamada al backend
       }
     });
   }
@@ -143,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Simular retraso de red
     setTimeout(() => {
-      // Aquí normalmente redirigiríamos o mostraríamos un mensaje de éxito
+      // Mensaje de éxito
       alert('Formulario enviado correctamente (simulación)');
       
       // Restaurar botón

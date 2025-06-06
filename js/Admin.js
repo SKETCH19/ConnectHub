@@ -104,8 +104,8 @@ document.addEventListener('DOMContentLoaded', function() {
     habitacionForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Aquí iría la lógica para guardar los datos
-        // Por ahora solo cerramos el modal y mostramos un mensaje
+        // Aqui va la lógica para guardar los datos
+        // Solo se creo el modal y mostramos un mensaje
         modal.classList.remove('active');
         showToast('Habitación guardada correctamente', 'success');
     });
@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             placeholder.textContent = `Generando reporte: ${reportType}...`;
             
-            // Simulación de generación de reporte
+            // Generación de reporte
             setTimeout(() => {
                 showToast(`Reporte ${reportType} generado con éxito`, 'success');
                 placeholder.textContent = `Vista previa del reporte: ${reportType}`;
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Función para mostrar notificaciones
+    // Mostrar notificaciones
     function showToast(message, type) {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
@@ -196,6 +196,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 3000);
     }
     
-    // Mostrar la sección dashboard por defecto
+    // Mostrar sección dashboard por defecto
     document.getElementById('dashboard').style.display = 'block';
 });

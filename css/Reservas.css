@@ -19,7 +19,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: calc(100vh - 120px); /* Ajusta según tu header/footer */
+    min-height: calc(100vh - 120px);
 }
 
 .container {
