@@ -26,18 +26,6 @@
 
     <!-- Header -->
     <?php include("Templates/menu.php"); ?>
-    
-    <!-- Hero Section -->
-    <section class="profile-hero set-bg" data-setbg="img/profile-bg.jpg">
-        <div class="hero-overlay">
-            <div class="container">
-                <h1>Mi Perfil</h1>
-                <nav class="breadcrumb">
-                    <a class="breadcrumb-item" href="index.php"><i class="lnr lnr-arrow-left"></i> Inicio</a>
-                </nav>
-            </div>
-        </div>
-    </section>
 
     <!-- Main Content -->
     <section class="profile-section">
