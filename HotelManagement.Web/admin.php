@@ -161,7 +161,7 @@
                                 <td>Individual</td>
                                 <td>1</td>
                                 <td><span class="status available">Disponible</span></td>
-                                <td>$120</td>
+                                <td>$125</td>
                                 <td>
                                     <button class="btn-edit"><i class="fas fa-edit"></i></button>
                                     <button class="btn-delete"><i class="fas fa-trash"></i></button>
