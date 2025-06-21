@@ -93,7 +93,7 @@
                                     <option value="ninos">Habitación de Niños ($100/noche)</option>
                                     <option value="king">Habitación King ($250/noche)</option>
                                     <option value="queen">Habitación Queen ($220/noche)</option>
-                                    <option value="familiar">Habitación Familiar ($170/noche)</option>
+                                    <option value="familiar">Habitación Familiar ($180/noche)</option>
                                     <option value="studio">Studio ($90/noche)</option>
                                     <option value="bungalow">Bungalow ($160/noche)</option>
                                 </select>
