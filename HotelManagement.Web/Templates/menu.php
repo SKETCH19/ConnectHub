@@ -41,6 +41,7 @@
                                 </li>
                                 <li><a href="./admin.php"><i class="fas fa-cog"></i> Admin</a></li>
                                 <li><a href="./contact.php"><i class="fas fa-envelope"></i> Contacto</a></li>
+                                <li><a href="./Perfil.php"><i class="fas fa-user"></i> Perfil</a></li>
                             </ul>
                         </nav>
 
