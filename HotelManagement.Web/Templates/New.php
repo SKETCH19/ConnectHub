@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
     <!-- CSS -->
-    <link rel="stylesheet" href="css/Habitaciones.css">
+    <link rel="stylesheet" href="css/.css">
 </head>
 
 <body>
@@ -26,24 +26,9 @@
     <!-- Header -->
     <?php include("Templates/menu.php"); ?>
     
-    <!-- Rooms Section -->
 
     <!-- Footer -->
     <?php include("Templates/footer.php"); ?>
 
-    <!-- JavaScript -->
-    <script src="js/Habitaciones.js"></script>
-    <script>
-        // Preloder
-        window.addEventListener('load', function() {
-            document.getElementById('preloder').style.display = 'none';
-        });
-
-        // Hero Background
-        if(document.querySelector('.set-bg')) {
-            document.querySelector('.set-bg').style.backgroundImage = 
-                "url('" + document.querySelector('.set-bg').getAttribute('data-setbg') + "')";
-        }
-    </script>
 </body>
 </html>
