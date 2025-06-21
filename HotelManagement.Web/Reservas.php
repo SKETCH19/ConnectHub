@@ -1,5 +1,3 @@
-Reservas:
-
 <!DOCTYPE html>
 <html lang="zxx">
 
