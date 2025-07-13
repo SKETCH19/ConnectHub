@@ -4,23 +4,50 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/php
 
 trigger:
-- Develop
+  branches:
+    include:
+    - Develop
+    - QA
+    - master
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'windows-latest'
 
 variables:
-  phpVersion: 8.1
+  buildConfiguration: 'Release'
+  solution: '**/*.sln'  # Variable para reutilizar
+
+timeoutInMinutes: 30
 
 steps:
-- script: |
-    sudo update-alternatives --set php /usr/bin/php$(phpVersion)
-    sudo update-alternatives --set phar /usr/bin/phar$(phpVersion)
-    sudo update-alternatives --set phpdbg /usr/bin/phpdbg$(phpVersion)
-    sudo update-alternatives --set php-cgi /usr/bin/php-cgi$(phpVersion)
-    sudo update-alternatives --set phar.phar /usr/bin/phar.phar$(phpVersion)
-    php -version
-  displayName: 'Use PHP version $(phpVersion)'
+- task: NuGetToolInstaller@1
+  displayName: 'Instalar NuGet'
 
-- script: composer install --no-interaction --prefer-dist
-  displayName: 'composer install'
+- task: NuGetCommand@2
+  displayName: 'Restaurar paquetes NuGet'
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  displayName: 'Compilar solución'
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
+    platform: 'Any CPU'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  displayName: 'Ejecutar pruebas'
+  inputs:
+    platform: 'Any CPU'
+    configuration: '$(buildConfiguration)'
+    testRunTitle: 'Pruebas Unitarias $(Build.BuildNumber)'
+  condition: succeededOrFailed()
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publicar artefactos'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
+  condition: succeeded()
