@@ -9,7 +9,12 @@ class ReservationCodeTest extends TestCase
         $code2 = generateReservationCode('maria@example.com', '2023-06-01');
         $code3 = generateReservationCode('juan@example.com', '2023-06-02');
         
-        $this->assertMatchesRegularExpression('/^RES-\d{3}-[A-Z0-9]{6}$/', $code1);
+        // Verifica el formato del código
+        $this->assertMatchesRegularExpression('/^RES-[A-Z]{3}-[A-Z0-9]{6}$/', $code1);
+        $this->assertMatchesRegularExpression('/^RES-[A-Z]{3}-[A-Z0-9]{6}$/', $code2);
+        $this->assertMatchesRegularExpression('/^RES-[A-Z]{3}-[A-Z0-9]{6}$/', $code3);
+        
+        // Verifica unicidad
         $this->assertNotEquals($code1, $code2);
         $this->assertNotEquals($code1, $code3);
     }
@@ -17,9 +22,12 @@ class ReservationCodeTest extends TestCase
 
 function generateReservationCode($email, $date)
 {
-    $prefix = substr(preg_replace('/[^A-Z0-9]/', '', strtoupper($email)), 0, 3);
-    $datePart = date('dmy', strtotime($date));
-    $random = strtoupper(substr(md5(uniqid()), 0, 6));
+    // Extrae 3 letras mayúsculas del email
+    $prefix = substr(preg_replace('/[^A-Z]/', '', strtoupper($email)), 0, 3);
+    $prefix = str_pad($prefix, 3, 'X'); // Asegura 3 caracteres
+    
+    // Genera parte aleatoria
+    $random = strtoupper(bin2hex(random_bytes(3))); // 6 caracteres alfanuméricos
     
     return 'RES-' . $prefix . '-' . $random;
 }
