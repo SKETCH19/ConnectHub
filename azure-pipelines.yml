@@ -1,8 +1,3 @@
-# PHP
-# Test and package your PHP project.
-# Add steps that run tests, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/php
-
 trigger:
   branches:
     include:
@@ -11,43 +6,60 @@ trigger:
     - master
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'  # Usamos Ubuntu que tiene mejor soporte para PHP
 
 variables:
-  buildConfiguration: 'Release'
-  solution: '**/*.sln'  # Variable para reutilizar
-
-timeoutInMinutes: 30
+  phpVersion: '8.2'  # Ajusta según tu versión de PHP
 
 steps:
-- task: NuGetToolInstaller@1
-  displayName: 'Instalar NuGet'
+# Paso 1: Configurar PHP
+- script: |
+    sudo apt-get update
+    sudo apt-get install -y php php-xml php-mbstring php-curl
+    php -v
+  displayName: 'Instalar PHP y extensiones necesarias'
 
-- task: NuGetCommand@2
-  displayName: 'Restaurar paquetes NuGet'
-  inputs:
-    restoreSolution: '$(solution)'
+# Paso 2: Instalar Composer
+- script: |
+    curl -sS https://getcomposer.org/installer | php
+    sudo mv composer.phar /usr/local/bin/composer
+    composer --version
+  displayName: 'Instalar Composer'
 
-- task: VSBuild@1
-  displayName: 'Compilar solución'
-  inputs:
-    solution: '$(solution)'
-    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
-    platform: 'Any CPU'
-    configuration: '$(buildConfiguration)'
+# Paso 3: Instalar dependencias del proyecto
+- script: |
+    composer install --no-progress --prefer-dist --optimize-autoloader
+  displayName: 'Instalar dependencias con Composer'
 
-- task: VSTest@2
-  displayName: 'Ejecutar pruebas'
+# Paso 4: Ejecutar todas las pruebas unitarias
+- script: |
+    vendor/bin/phpunit --testsuite Unit --log-junit unit-test-results.xml
+    vendor/bin/phpunit --testsuite Feature --log-junit feature-test-results.xml
+  displayName: 'Ejecutar todas las pruebas PHPUnit'
+
+# Paso 5: Publicar resultados de pruebas unitarias
+- task: PublishTestResults@2
   inputs:
-    platform: 'Any CPU'
-    configuration: '$(buildConfiguration)'
-    testRunTitle: 'Pruebas Unitarias $(Build.BuildNumber)'
+    testResultsFiles: '**/unit-test-results.xml'
+    testRunTitle: 'Unit Test Results'
+    mergeTestResults: true
   condition: succeededOrFailed()
+  displayName: 'Publicar resultados de pruebas unitarias'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publicar artefactos'
+# Paso 6: Publicar resultados de pruebas de características
+- task: PublishTestResults@2
   inputs:
-    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    testResultsFiles: '**/feature-test-results.xml'
+    testRunTitle: 'Feature Test Results'
+    mergeTestResults: true
+  condition: succeededOrFailed()
+  displayName: 'Publicar resultados de pruebas de características'
+
+# Paso 7: Publicar artefactos (opcional)
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(System.DefaultWorkingDirectory)'
     ArtifactName: 'drop'
     publishLocation: 'Container'
   condition: succeeded()
+  displayName: 'Publicar artefactos'
