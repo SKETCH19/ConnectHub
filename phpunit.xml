@@ -3,22 +3,11 @@
          colors="true"
          stopOnFailure="false">
     <testsuites>
-        <testsuite name="Unit">
-            <directory suffix="Test.php">tests/Unit</directory>
-        </testsuite>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">tests/Feature</directory>
+        <testsuite name="All Tests">
+            <directory>tests</directory>
         </testsuite>
     </testsuites>
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-        </whitelist>
-    </filter>
     <logging>
-        <log type="junit" target="unit-test-results.xml"/>
+        <log type="junit" target="test-results.xml"/>
     </logging>
 </phpunit>
-
-
-
