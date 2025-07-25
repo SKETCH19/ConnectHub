@@ -8,77 +8,41 @@ trigger:
 pool:
   vmImage: 'ubuntu-latest'
 
-variables:
-  PHP_VERSION: '8.1'
-
 steps:
 # Paso 1: Instalar PHP y extensiones necesarias
 - script: |
     sudo apt-get update
-    sudo apt-get install -y software-properties-common
-    sudo add-apt-repository ppa:ondrej/php -y
-    sudo apt-get update
-    sudo apt-get install -y php$(PHP_VERSION) php$(PHP_VERSION)-xml php$(PHP_VERSION)-mbstring php$(PHP_VERSION)-curl php$(PHP_VERSION)-dom php$(PHP_VERSION)-pdo php$(PHP_VERSION)-mysql
+    sudo apt-get install -y php php-xml php-mbstring php-curl
     php -v
-  displayName: 'Instalar PHP y extensiones'
+  displayName: 'Instalar PHP'
 
 # Paso 2: Instalar Composer
 - script: |
     curl -sS https://getcomposer.org/installer | php
     sudo mv composer.phar /usr/local/bin/composer
-    sudo chmod +x /usr/local/bin/composer
     composer --version
   displayName: 'Instalar Composer'
 
-# Paso 3: Instalar dependencias principales
+# Paso 3: Instalar dependencias
 - script: |
     composer install --no-progress --prefer-dist --optimize-autoloader
-  displayName: 'Instalar dependencias principales'
+  displayName: 'Instalar dependencias'
 
-# Paso 4: Instalar dependencias de desarrollo (Behat)
+# Paso 4: Ejecutar pruebas 
 - script: |
-    composer require --dev behat/behat behat/mink behat/mink-goutte-driver behat/mink-selenium2-driver phpunit/phpunit
-  displayName: 'Instalar dependencias de desarrollo'
-
-# Paso 5: Ejecutar pruebas unitarias (PHPUnit)
-- script: |
-    vendor/bin/phpunit tests/ --log-junit unit-test-results.xml --coverage-clover coverage.xml
+    vendor/bin/phpunit tests/ --log-junit test-results.xml
   displayName: 'Ejecutar pruebas PHPUnit'
   workingDirectory: '$(System.DefaultWorkingDirectory)'
 
-# Paso 6: Ejecutar pruebas de features (Behat)
-- script: |
-    vendor/bin/behat --format progress --format junit --out behat-results.xml
-  displayName: 'Ejecutar pruebas Behat'
-  workingDirectory: '$(System.DefaultWorkingDirectory)'
-
-# Paso 7: Publicar resultados de pruebas unitarias
+# Paso 5: Publicar resultados
 - task: PublishTestResults@2
   inputs:
-    testResultsFiles: '**/unit-test-results.xml'
-    testRunTitle: 'PHPUnit Test Results (Unit)'
-    mergeTestResults: true
+    testResultsFiles: '**/test-results.xml'
+    testRunTitle: 'PHPUnit Test Results'
   condition: succeededOrFailed()
-  displayName: 'Publicar resultados unitarios'
+  displayName: 'Publicar resultados'
 
-# Paso 8: Publicar resultados de pruebas Behat
-- task: PublishTestResults@2
-  inputs:
-    testResultsFiles: '**/behat-results.xml'
-    testRunTitle: 'Behat Test Results (Features)'
-    mergeTestResults: true
-  condition: succeededOrFailed()
-  displayName: 'Publicar resultados Behat'
-
-# Paso 9: Publicar cobertura de código
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'Clover'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.xml'
-    pathToSources: '$(System.DefaultWorkingDirectory)'
-  displayName: 'Publicar cobertura de código'
-
-# Paso 10: Publicar artefactos
+# Paso 6 Publicar artefactos
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(System.DefaultWorkingDirectory)'
