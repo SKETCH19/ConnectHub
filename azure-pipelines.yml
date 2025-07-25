@@ -28,7 +28,7 @@ steps:
     composer install --no-progress --prefer-dist --optimize-autoloader
   displayName: 'Instalar dependencias'
 
-# Paso 4: Ejecutar pruebas (CONFIGURACIÓN CLAVE)
+# Paso 4: Ejecutar pruebas 
 - script: |
     vendor/bin/phpunit tests/ --log-junit test-results.xml
   displayName: 'Ejecutar pruebas PHPUnit'
@@ -42,7 +42,7 @@ steps:
   condition: succeededOrFailed()
   displayName: 'Publicar resultados'
 
-# Paso 6 (Opcional): Publicar artefactos
+# Paso 6 Publicar artefactos
 - task: PublishBuildArtifacts@1
   inputs:
     PathtoPublish: '$(System.DefaultWorkingDirectory)'
