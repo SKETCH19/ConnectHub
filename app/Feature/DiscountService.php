@@ -29,4 +29,5 @@ class DiscountService
     {
         return max(0, $totalAmount - $discount);
     }
+
 }
