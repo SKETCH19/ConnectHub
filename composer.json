@@ -1,16 +1,22 @@
 {
     "name": "phipp/hotel-gestin",
-    "autoload": {
-        "psr-4": {
-            "Phipp\\HotelGestin\\": "src/"
-        }
-    },
     "authors": [
         {
             "name": "Adrian Reyes",
             "email": "phipps11x19@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Phipp\\HotelGestin\\": "src/",
+            "App\\": "app/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
     "require-dev": {
         "phpunit/phpunit": "^12.2"
     }
