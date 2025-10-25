@@ -55,8 +55,8 @@ function getBlockedUsers($user_id) {
 // Obtener contactos destacados
 function getFeaturedContacts($user_id) {
     global $pdo;
-    // En una implementación real, tendrías una tabla para destacados
-    // Por ahora devolvemos algunos amigos como ejemplo
+    //
+    //
     return getUserFriends($user_id);
 }
 
@@ -238,26 +238,41 @@ $featured_contacts = getFeaturedContacts($_SESSION['user_id']);
             </div>
         </div>
         
-        <!-- Sección de Búsqueda -->
-        <div class="content-area" id="search-section" style="display: none;">
-            <div class="section-header">
-                <h2>🔍 Buscar Amigos</h2>
-            </div>
-            
-            <div class="search-container">
-                <input type="text" class="search-input" id="user-search" placeholder="Buscar por nombre de usuario...">
-                <button class="btn btn-primary" id="search-btn">Buscar</button>
-            </div>
-            
-            <div class="search-results" id="search-results">
-                <div class="empty-state">
-                    <div class="empty-icon">🔍</div>
-                    <h3>Busca usuarios</h3>
-                    <p>Ingresa un nombre de usuario para buscar</p>
-                </div>
-            </div>
+         <!-- Sección de Búsqueda -->
+<div class="content-area search-section" id="search-section" style="display: none;">
+    <div class="search-hero">
+        <h2>🔍 Conecta con el Universo Sonder</h2>
+        <p>Descubre personas extraordinarias y expande tu red de conexiones</p>
+        
+        <div class="search-container-improved">
+            <input type="text" class="search-input-improved" id="user-search-improved" 
+                   placeholder="Buscar por usuario, nombre o intereses...">
+            <button class="search-btn-improved" id="search-btn-improved">
+                <span>🚀 Buscar</span>
+            </button>
         </div>
         
+        <div class="search-suggestions">
+            <div class="suggestion-tag" data-search="developers">💻 Developers</div>
+            <div class="suggestion-tag" data-search="designers">🎨 Designers</div>
+            <div class="suggestion-tag" data-search="gamers">🎮 Gamers</div>
+            <div class="suggestion-tag" data-search="music">🎵 Música</div>
+            <div class="suggestion-tag" data-search="travel">✈️ Viajes</div>
+        </div>
+    </div>
+    
+    <div class="search-results-improved" id="search-results-improved">
+        <div class="empty-state">
+            <div class="empty-icon">🌌</div>
+            <h3>Explora el Universo Sonder</h3>
+            <p>Busca usuarios para encontrar conexiones increíbles</p>
+            <div class="search-stats">
+                <p>+5,000 usuarios esperando conocerte</p>
+            </div>
+        </div>
+    </div>
+</div>
+
         <!-- Sección de Destacados -->
         <div class="content-area" id="featured-section" style="display: none;">
             <div class="section-header">

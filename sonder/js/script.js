@@ -43,50 +43,207 @@ function setupFriendTabs() {
     });
 }
 
-// Búsqueda de usuarios
-function setupSearch() {
-    const searchBtn = document.getElementById('search-btn');
-    const searchInput = document.getElementById('user-search');
-    
-    function performSearch() {
-        const query = searchInput.value.trim();
-        const resultsContainer = document.getElementById('search-results');
+// Búsqueda
+function setupImprovedSearch() {
+    const searchBtn = document.getElementById('search-btn-improved');
+    const searchInput = document.getElementById('user-search-improved');
+    const resultsContainer = document.getElementById('search-results-improved');
+    const suggestionTags = document.querySelectorAll('.suggestion-tag');
+
+    function performImprovedSearch(query = '') {
+        const searchQuery = query || searchInput.value.trim();
         
-        if (query.length < 3) {
+        if (!searchQuery) {
             resultsContainer.innerHTML = `
                 <div class="empty-state">
-                    <div class="empty-icon">🔍</div>
-                    <h3>Ingresa al menos 3 caracteres</h3>
-                    <p>Escribe el nombre de usuario que buscas</p>
+                    <div class="empty-icon">🌌</div>
+                    <h3>Explora el Universo Sonder</h3>
+                    <p>Busca usuarios para encontrar conexiones increíbles</p>
+                    <div class="search-stats">
+                        <p>+5,000 usuarios esperando conocerte</p>
+                    </div>
                 </div>
             `;
             return;
         }
-        
-        // Simular búsqueda (en una app real, harías una petición AJAX)
+
+        // Mostrar loading
         resultsContainer.innerHTML = `
-            <div class="search-result-item">
-                <img src="https://via.placeholder.com/50" alt="Usuario" class="search-result-avatar">
-                <div class="search-result-info">
-                    <div class="search-result-name">Usuario Ejemplo</div>
-                    <div class="search-result-username">@${query}</div>
-                </div>
-                <div class="search-result-actions">
-                    <button class="btn btn-primary send-request">Enviar solicitud</button>
-                </div>
-            </div>
-            <div class="empty-state">
-                <p>Estos son resultados de ejemplo. En una implementación real, se conectaría con la base de datos.</p>
+            <div class="search-loading">
+                <div class="search-loading-spinner"></div>
+                <p>Explorando el universo...</p>
             </div>
         `;
+
+        // Simular búsqueda con delay
+        setTimeout(() => {
+            // Resultados de ejemploS
+            const sampleUsers = [
+                {
+                    id: 1,
+                    name: "Alexandra Vega",
+                    username: "alexvega",
+                    bio: "Desarrolladora full-stack 💻 | Amante del espacio 🌌 | Fotografía astronómica",
+                    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face"
+                },
+                {
+                    id: 2,
+                    name: "Marco Rodríguez",
+                    username: "marcord",
+                    bio: "Diseñador UI/UX 🎨 | Música electrónica 🎵 | Viajero intergaláctico 🌠",
+                    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face"
+                },
+                {
+                    id: 3,
+                    name: "Sofia Chen",
+                    username: "sofchen",
+                    bio: "Científica de datos 📊 | Escritora ✍️ | Exploradora de realidades alternas",
+                    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face"
+                }
+            ];
+
+            let resultsHTML = '';
+            
+            sampleUsers.forEach(user => {
+                resultsHTML += `
+                    <div class="search-result-card" data-user-id="${user.id}">
+                        <img src="${user.avatar}" alt="${user.name}" class="search-result-avatar-improved">
+                        <div class="search-result-info-improved">
+                            <div class="search-result-name-improved">${user.name}</div>
+                            <div class="search-result-username-improved">@${user.username}</div>
+                            <div class="search-result-bio">${user.bio}</div>
+                        </div>
+                        <div class="search-result-actions-improved">
+                            <button class="search-action-btn add-friend-btn">
+                                <span>+</span> Agregar
+                            </button>
+                            <button class="search-action-btn view-profile-btn">
+                                👁️ Ver
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            resultsHTML += `
+                <div class="search-stats">
+                    <p>Mostrando ${sampleUsers.length} resultados para "${searchQuery}"</p>
+                </div>
+            `;
+
+            resultsContainer.innerHTML = resultsHTML;
+            
+            // Agregar event listeners a los botones después de crear el HTML
+            document.querySelectorAll('.add-friend-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = this.closest('.search-result-card').getAttribute('data-user-id');
+                    sendFriendRequest(userId);
+                });
+            });
+            
+            document.querySelectorAll('.view-profile-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const userId = this.closest('.search-result-card').getAttribute('data-user-id');
+                    viewProfile(userId);
+                });
+            });
+        }, 1500);
     }
+
+    // Event listeners
+    searchBtn.addEventListener('click', () => performImprovedSearch());
     
-    searchBtn.addEventListener('click', performSearch);
     searchInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
-            performSearch();
+            performImprovedSearch();
         }
     });
+
+    // Sugerencias de búsqueda
+    suggestionTags.forEach(tag => {
+        tag.addEventListener('click', function() {
+            const searchTerm = this.getAttribute('data-search');
+            searchInput.value = searchTerm;
+            performImprovedSearch(searchTerm);
+        });
+    });
+
+    // Efecto de placeholder dinámico
+    const placeholders = [
+        "Buscar por usuario, nombre o intereses...",
+        "Ejemplo: desarrolladores, diseñadores...",
+        "Encuentra personas con tus mismos intereses",
+        "Busca por habilidades o pasatiempos..."
+    ];
+    let placeholderIndex = 0;
+
+    setInterval(() => {
+        searchInput.placeholder = placeholders[placeholderIndex];
+        placeholderIndex = (placeholderIndex + 1) % placeholders.length;
+    }, 3000);
+}
+
+// Funciones auxiliares para acciones de búsqueda
+function sendFriendRequest(userId) {
+    // Simular envío de solicitud
+    const btn = event.target.closest('.add-friend-btn');
+    const originalHTML = btn.innerHTML;
+    
+    btn.innerHTML = '<span>⏳</span> Enviando...';
+    btn.disabled = true;
+    
+    setTimeout(() => {
+        btn.innerHTML = '<span>✓</span> Enviado';
+        btn.style.background = 'linear-gradient(45deg, #51cf66, #40c057)';
+        
+        // Mostrar notificación
+        showNotification('Solicitud de amistad enviada correctamente', 'success');
+    }, 1000);
+}
+
+function viewProfile(userId) {
+    showNotification(`Perfil de usuario ${userId} - Funcionalidad en desarrollo`, 'info');
+}
+
+function showNotification(message, type = 'info') {
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-icon">${type === 'success' ? '✓' : 'ℹ️'}</span>
+            <span class="notification-message">${message}</span>
+        </div>
+    `;
+    
+    // Estilos para la notificación
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: var(--space-blue);
+        border: 1px solid ${type === 'success' ? 'rgba(81, 207, 102, 0.3)' : 'rgba(0, 212, 255, 0.3)'};
+        border-left: 4px solid ${type === 'success' ? '#51cf66' : 'var(--electric-blue)'};
+        color: var(--stardust);
+        padding: 1rem 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        z-index: 10000;
+        animation: slideInRight 0.3s ease;
+        backdrop-filter: blur(10px);
+    `;
+    
+    document.body.appendChild(notification);
+    
+    // Remover después de 3 segundos
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.parentNode.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // Modales
@@ -96,18 +253,22 @@ function setupModals() {
     const changePasswordBtn = document.getElementById('change-password-btn');
     const passwordForm = document.getElementById('password-form');
     
-    changePasswordBtn.addEventListener('click', function() {
-        passwordModal.style.display = 'flex';
-    });
+    if (changePasswordBtn) {
+        changePasswordBtn.addEventListener('click', function() {
+            passwordModal.style.display = 'flex';
+        });
+    }
     
     // Modal de eliminar cuenta
     const deleteModal = document.getElementById('delete-modal');
     const deleteAccountBtn = document.getElementById('delete-account-btn');
     const deleteForm = document.getElementById('delete-form');
     
-    deleteAccountBtn.addEventListener('click', function() {
-        deleteModal.style.display = 'flex';
-    });
+    if (deleteAccountBtn) {
+        deleteAccountBtn.addEventListener('click', function() {
+            deleteModal.style.display = 'flex';
+        });
+    }
     
     // Cerrar modales
     document.querySelectorAll('.modal-close, .modal-cancel').forEach(btn => {
@@ -119,22 +280,26 @@ function setupModals() {
     });
     
     // Enviar formularios de modales
-    passwordForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        alert('Funcionalidad de cambiar contraseña - En desarrollo');
-        passwordModal.style.display = 'none';
-    });
+    if (passwordForm) {
+        passwordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Funcionalidad de cambiar contraseña - En desarrollo');
+            passwordModal.style.display = 'none';
+        });
+    }
     
-    deleteForm.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const password = this.querySelector('input[name="confirm_password"]').value;
-        if (password) {
-            if (confirm('¿ESTÁS ABSOLUTAMENTE SEGURO? Esta acción no se puede deshacer.')) {
-                alert('Funcionalidad de eliminar cuenta - En desarrollo');
-                deleteModal.style.display = 'none';
+    if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = this.querySelector('input[name="confirm_password"]').value;
+            if (password) {
+                if (confirm('¿ESTÁS ABSOLUTAMENTE SEGURO? Esta acción no se puede deshacer.')) {
+                    alert('Funcionalidad de eliminar cuenta - En desarrollo');
+                    deleteModal.style.display = 'none';
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 // Acciones de amigos
@@ -215,7 +380,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Configurar funcionalidades
     setupFriendTabs();
-    setupSearch();
+    setupImprovedSearch(); // Cambiado de setupSearch() a setupImprovedSearch()
     setupModals();
     setupFriendActions();
     
@@ -234,6 +399,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+    
+    // Agregar animaciones CSS para notificaciones
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
 });
 
 // Función para enviar mensajes
